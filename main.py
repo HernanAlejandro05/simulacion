@@ -1,11 +1,11 @@
 from sim import *
 import random
 
-MAX_CLIENTES = 80
-MAX_ESTUDIANTES = 2
+MAX_CLIENTES = 800
+MAX_ESTUDIANTES = 31
 TIEMPO_PASANTIA = [9600, 5760]
 
-r = .5
+r = .65
 # r = random.random()
 c1 = int(MAX_CLIENTES*r)
 c2 = MAX_CLIENTES - c1

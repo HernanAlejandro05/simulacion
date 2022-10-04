@@ -3,7 +3,22 @@ import random
 import numpy as np
 import matplotlib.pyplot as pp
 
-TIEMPO_TRAMITE = [720, 60, 60, 240, 30, 60, 240, 30, 600, 1200, 480, 240]
+# TIEMPO_TRAMITE = [720, 60, 60, 240, 30, 60, 240, 30, 600, 1200, 480, 240]
+TIEMPO_TRAMITE = {
+    'Capacitacion temas tributarios': 720,
+    'Determinar necesidades del contribuyente': 60,
+    'Ingreso de contribuyentes a la base de datos': 60,
+    'Asesoramiento individual sobre derechos y oblicgaciones tributarias': 240,
+    'Recepcion de documentos tributarios': 30,
+    'Analisis de documentos tributarios': 60,
+    'Llenado de formularios en el sri': 240,
+    'Entrega de declaraciones y documentacion al contribuyente': 30,
+    'Determinar los grupos vulnerables': 600,
+    'Preparacion de talleres de capacitacion': 1200,
+    'Ejecucion de talleres de capacitacion': 480,
+    'Promocion de servicios tributarios': 240,
+}
+
 INTERVALO_LLEGADA = 96
 
 tiempo = {}
@@ -24,15 +39,17 @@ class OficinaTributariaUC(object):
         global total_tiempo_tramites
         global contador_de_tramites
         global tipos_de_tramite
-        tramite = np.random.choice(TIEMPO_TRAMITE, 1)
-        duracion = tramite[0]/60
-        # print(f'{cliente} con un tramite de duracion: {duracion}')
+        # tramite = np.random.choice(TIEMPO_TRAMITE, 1)
+        tramite = np.random.choice(list(TIEMPO_TRAMITE.keys()), 1)[0]
+        duracion = TIEMPO_TRAMITE[tramite]/60
+        print(
+            f'{cliente} entra a realizar: {tramite} y tomara un tiempo de {duracion}hrs.')
 
         total_tiempo_tramites += duracion
         contador_de_tramites += 1
         # tipos_de_tramite[tramite[0]] += 1
 
-        yield self.env.timeout(tramite[0])
+        yield self.env.timeout(int(TIEMPO_TRAMITE[tramite]))
         k = duracion
         if k in tramites:
             tramites[k] = tramites[k]+1
@@ -40,13 +57,10 @@ class OficinaTributariaUC(object):
             tramites[k] = 1
 
 
-def llegada_cliente(env, nombre, oficina):
-    #print('Llega cliente: %s a la hora %.2f.' % (nombre, env.now/60))
+def llegada_cliente(env, cliente, oficina):
     with oficina.estudiantes.request() as estudiante:
         yield estudiante
-        #print('Entra [%s] a la oficina: a la hora %.2f.' % (nombre, env.now/60))
-        yield env.process(oficina.atendiendo_tramite(nombre))
-        #print('[%s] atendido a las %.2f.' % (nombre, env.now/60))
+        yield env.process(oficina.atendiendo_tramite(cliente))
 
         k = env.now/60
     if k in tiempo:
@@ -88,12 +102,13 @@ def run(max_estudiantes, tiempo_pasantia, max_clientes):
     x, y = zip(*datos)
     x_1, y_1 = zip(*datos_1)
     print(f'Cantidad de alumnos: {max_estudiantes}\n')
-    print(f'cantidad de clientes que atendio: {sum(y)}\n')  # total horas, total clientes
+    # total horas, total clientes
     print(f'Cantidad de clientes que deberia atender: {max_clientes}\n')
     # total horas, total clientes
     promedio_duracion_tramite = total_tiempo_tramites / contador_de_tramites
     print(f'Cantidad de tramites realizados: {contador_de_tramites}\n')
-    print(f'Duracion promedio por tramite: {promedio_duracion_tramite:.2f} horas')
+    print(
+        f'Duracion promedio por tramite: {promedio_duracion_tramite:.2f} horas')
     print(f'Horas cumplidas: {total_tiempo_tramites}\n'.upper())
     pp.bar(x, y, width=1, linewidth=2, color='blue')
     # pp.scatter(x,y,color='blue')
@@ -104,11 +119,11 @@ def run(max_estudiantes, tiempo_pasantia, max_clientes):
     pp.grid(True)
     # pp.show()
 
-    # print(x_1,y_1)
-    #print(sum(x_1), sum(y_1))
+    aux_tramites = contador_de_tramites
 
     tiempo = {}
     tramites = {}
     total_tiempo_tramites = 0
     contador_de_tramites = 0
-    return max_clientes, sum(y)
+
+    return max_clientes, aux_tramites
