@@ -3,27 +3,29 @@ import random
 import numpy as np
 import matplotlib.pyplot as pp
 
-# TIEMPO_TRAMITE = [720, 60, 60, 240, 30, 60, 240, 30, 600, 1200, 480, 240]
-TIEMPO_TRAMITE = {
-    'Capacitacion temas tributarios': 720,
-    'Determinar necesidades del contribuyente': 60,
-    'Ingreso de contribuyentes a la base de datos': 60,
-    'Asesoramiento individual sobre derechos y oblicgaciones tributarias': 240,
-    'Recepcion de documentos tributarios': 30,
-    'Analisis de documentos tributarios': 60,
-    'Llenado de formularios en el sri': 240,
-    'Entrega de declaraciones y documentacion al contribuyente': 30,
-    'Determinar los grupos vulnerables': 600,
-    'Preparacion de talleres de capacitacion': 1200,
-    'Ejecucion de talleres de capacitacion': 480,
-    'Promocion de servicios tributarios': 240,
+# LISTA_TRAMITES = [720, 60, 60, 240, 30, 60, 240, 30, 600, 1200, 480, 240]
+LISTA_TRAMITES = {
+    '1. Capacitacion temas tributarios': 720,
+    '2. Determinar necesidades del contribuyente': 60,
+    '3. Ingreso de contribuyentes a la base de datos': 60,
+    '4. Asesoramiento individual sobre derechos y oblicgaciones tributarias': 240,
+    '5. Recepcion de documentos tributarios': 30,
+    '6. Analisis de documentos tributarios': 60,
+    '7. Llenado de formularios en el sri': 240,
+    '8. Entrega de declaraciones y documentacion al contribuyente': 30,
+    '9. Determinar los grupos vulnerables': 600,
+    '10. Preparacion de talleres de capacitacion': 1200,
+    '11. Ejecucion de talleres de capacitacion': 480,
+    '12. Promocion de servicios tributarios': 240,
 }
 
 INTERVALO_LLEGADA = 96
 
 tiempo = {}
-tiempo_pasantia = 0
 tramites = {}
+tramite = {}
+contador_tramites = 0
+tiempo_pasantia = 0
 total_tiempo_tramites = 0
 contador_de_tramites = 0
 tipos_de_tramite = {}
@@ -38,28 +40,32 @@ class OficinaTributariaUC(object):
 
     def atendiendo_tramite(self, cliente):
         global total_tiempo_tramites
+        global contador_tramites
         global contador_de_tramites
         global tipos_de_tramite
         global tiempo_pasantia
-        # tramite = np.random.choice(TIEMPO_TRAMITE, 1)
+        global tramite
 
+        duracion = 0
         self.check_time()
 
-        tramite = np.random.choice(list(TIEMPO_TRAMITE.keys()), 1)[0]
-        duracion = TIEMPO_TRAMITE[tramite]/60
+        lista_tareas = list(tramite.keys())
+        if contador_tramites < len(lista_tareas):
+            tramite_seleccionado = lista_tareas[contador_tramites]
+            duracion = tramite[tramite_seleccionado]/60
+        else:
+            tramite_seleccionado = np.random.choice(list(tramite.keys()), 1)[0]
+            duracion = tramite[tramite_seleccionado]/60
 
         total_tiempo_tramites += duracion
-        # if total_tiempo_tramites >= (tiempo_pasantia/60):
-        #     end_event = self.env.event()
-        #     end_event.succeed()
 
+        contador_tramites += 1
         contador_de_tramites += 1
+
         print(
-            f'{cliente} entra a realizar: {tramite} y tomara un tiempo de {duracion}hrs.')
+            f'{cliente} entra a realizar: {tramite_seleccionado} y tomara un tiempo de {duracion}hrs.')
 
-        # tipos_de_tramite[tramite[0]] += 1
-
-        yield self.env.timeout(int(TIEMPO_TRAMITE[tramite]))
+        yield self.env.timeout(int(tramite[tramite_seleccionado]))
         k = duracion
         if k in tramites:
             tramites[k] = tramites[k]+1
@@ -68,14 +74,16 @@ class OficinaTributariaUC(object):
 
     def check_time(self):
         duracion = tiempo_pasantia/60
-        limite_duracion = duracion-20 if duracion == 160 else duracion-10
-        if total_tiempo_tramites >= limite_duracion and 'Capacitacion temas tributarios' \
-                in TIEMPO_TRAMITE and 'Preparacion de talleres de capacitacion' in TIEMPO_TRAMITE:
+        limite_duracion = duracion-30 if duracion == 160 else duracion-20
+        if total_tiempo_tramites >= limite_duracion and '1. Capacitacion temas tributarios' \
+                in tramite and '10. Preparacion de talleres de capacitacion' in tramite \
+                and '11. Ejecucion de talleres de capacitacion' in tramite \
+                and '9. Determinar los grupos vulnerables' in tramite:
 
-            del TIEMPO_TRAMITE['Capacitacion temas tributarios']
-            # del TIEMPO_TRAMITE['Determinar los grupos vulnerables']
-            # del TIEMPO_TRAMITE['Ejecucion de talleres de capacitacion']
-            del TIEMPO_TRAMITE['Preparacion de talleres de capacitacion']
+            del tramite['1. Capacitacion temas tributarios']
+            del tramite['9. Determinar los grupos vulnerables']
+            del tramite['11. Ejecucion de talleres de capacitacion']
+            del tramite['10. Preparacion de talleres de capacitacion']
 
 
 def llegada_cliente(env, cliente, oficina):
@@ -105,15 +113,18 @@ def run(max_estudiantes, duracion_pasantia, max_clientes):
     global tiempo
     global tiempo_pasantia
     global tramites
+    global tramite
     global total_tiempo_tramites
+    global contador_tramites
     global contador_de_tramites
     random.seed(10)
 
+    tramite = LISTA_TRAMITES.copy()
     tiempo_pasantia = duracion_pasantia
 
     env = simpy.Environment()
     env.process(ejecutar_simulacion(env, max_estudiantes,
-                max_clientes, TIEMPO_TRAMITE, INTERVALO_LLEGADA))
+                max_clientes, tramite, INTERVALO_LLEGADA))
 
     print('*'*50)
     print(f'Tiempo de pasantia: {duracion_pasantia/60}'.upper())
@@ -127,7 +138,7 @@ def run(max_estudiantes, duracion_pasantia, max_clientes):
     x_1, y_1 = zip(*datos_1)
     print(f'Cantidad de alumnos: {max_estudiantes}\n')
     # total horas, total clientes
-    print(f'Cantidad de clientes que deberia atender: {max_clientes}\n')
+    # print(f'Cantidad de clientes que deberia atender: {max_clientes}\n')
     # total horas, total clientes
     promedio_duracion_tramite = total_tiempo_tramites / contador_de_tramites
     print(f'Cantidad de tramites realizados: {contador_de_tramites}\n')
@@ -149,5 +160,6 @@ def run(max_estudiantes, duracion_pasantia, max_clientes):
     tramites = {}
     total_tiempo_tramites = 0
     contador_de_tramites = 0
+    contador_tramites = 0
 
     return max_clientes, aux_tramites
