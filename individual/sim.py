@@ -3,6 +3,9 @@ import random
 import numpy as np
 import matplotlib.pyplot as pp
 
+from data.dao import registrar_estudiante, actualizar_estudiante, registrar_tramite
+from data.schemas import EsquemaEstudiante, EsquemaTramite
+
 # LISTA_TRAMITES = [720, 60, 60, 240, 30, 60, 240, 30, 600, 1200, 480, 240]
 LISTA_TRAMITES = {
     '1. Capacitacion temas tributarios': 720,
@@ -22,13 +25,14 @@ LISTA_TRAMITES = {
 INTERVALO_LLEGADA = 96
 
 tiempo = {}
-tramites = {}
 tramite = {}
-contador_tramites = 0
+tramites = {}
+estudiante_id = 0
 tiempo_pasantia = 0
-total_tiempo_tramites = 0
-contador_de_tramites = 0
 tipos_de_tramite = {}
+contador_tramites = 0
+contador_de_tramites = 0
+total_tiempo_tramites = 0
 
 
 class OficinaTributariaUC(object):
@@ -39,12 +43,13 @@ class OficinaTributariaUC(object):
         self.tiempo_tramite = tiempo_tramite
 
     def atendiendo_tramite(self, cliente):
-        global total_tiempo_tramites
+        global tramite
+        global estudiante_id
+        global tiempo_pasantia
+        global tipos_de_tramite
         global contador_tramites
         global contador_de_tramites
-        global tipos_de_tramite
-        global tiempo_pasantia
-        global tramite
+        global total_tiempo_tramites
 
         duracion = 0
         self.check_time()
@@ -64,6 +69,14 @@ class OficinaTributariaUC(object):
 
         print(
             f'{cliente} entra a realizar: {tramite_seleccionado} y tomara un tiempo de {duracion}hrs.')
+
+        tramite_data = EsquemaTramite(
+            duracion_tramite=duracion,
+            estudiante_id=estudiante_id,
+            tramite_seleccionado=tramite_seleccionado
+        )
+
+        registrar_tramite(tramite_data)
 
         yield self.env.timeout(int(tramite[tramite_seleccionado]))
         k = duracion
@@ -109,15 +122,29 @@ def ejecutar_simulacion(env, max_estudiantes, max_clientes, tiempo_tramite, inte
         env.process(llegada_cliente(env, 'Cliente-%d' % (i+1), oficina))
 
 
-def run(max_estudiantes, duracion_pasantia, max_clientes):
+def run(max_estudiantes, duracion_pasantia, max_clientes, simulacion_id):
     global tiempo
-    global tiempo_pasantia
-    global tramites
     global tramite
-    global total_tiempo_tramites
+    global tramites
+    global estudiante_id
+    global tiempo_pasantia
     global contador_tramites
     global contador_de_tramites
+    global total_tiempo_tramites
     random.seed(10)
+
+    print('SIMULACION>>>>>', simulacion_id)
+
+    estudiante_in = EsquemaEstudiante(
+        horas_cumplidas=0.0,
+        tramites_realizados=0,
+        simulacion_id=simulacion_id,
+        tiempo_promedio_por_tramite=0.0
+    )
+
+    estudiante_id = registrar_estudiante(estudiante_in).id
+    
+    print('ESTUDIANTE>>>>>', estudiante_id)
 
     tramite = LISTA_TRAMITES.copy()
     tiempo_pasantia = duracion_pasantia
@@ -145,6 +172,16 @@ def run(max_estudiantes, duracion_pasantia, max_clientes):
     print(
         f'Duracion promedio por tramite: {promedio_duracion_tramite:.2f} horas')
     print(f'Horas cumplidas: {total_tiempo_tramites}\n'.upper())
+
+    estudiante_out = EsquemaEstudiante(
+        simulacion_id=simulacion_id,
+        horas_cumplidas=total_tiempo_tramites,
+        tramites_realizados=contador_de_tramites,
+        tiempo_promedio_por_tramite=promedio_duracion_tramite
+    )
+
+    actualizar_estudiante(estudiante_id, estudiante_out)
+
     pp.bar(x, y, width=1, linewidth=2, color='blue')
     # pp.scatter(x,y,color='blue')
     pp.grid(True)
@@ -158,8 +195,8 @@ def run(max_estudiantes, duracion_pasantia, max_clientes):
 
     tiempo = {}
     tramites = {}
-    total_tiempo_tramites = 0
-    contador_de_tramites = 0
     contador_tramites = 0
+    contador_de_tramites = 0
+    total_tiempo_tramites = 0
 
     return max_clientes, aux_tramites
