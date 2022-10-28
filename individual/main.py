@@ -1,7 +1,8 @@
 from sim import *
 import random
 
-from data.dao import registrar_simulacion
+from data.schemas import EsquemaSimulacion
+from data.dao import registrar_simulacion, actualizar_simulacion
 
 MAX_CLIENTES = 800
 MAX_ESTUDIANTES = 30
@@ -27,22 +28,33 @@ if __name__ == '__main__':
     else:
         estudiantes = [e2, e1]
 
-    acum_horas = 0
+    clientes_atendidos = 0
 
     print('CLIENTES>>>', clientes)
     print('ESTUDIANTES>>>', estudiantes)
 
-    simulacion_id = registrar_simulacion().id
+    simulacion = registrar_simulacion()
 
     for e in range(2):
         print(f"{'-'*50}>[{estudiantes[e]}]<{'-'*50}")
         for i in range(estudiantes[e]):
-            max_clientes, horas = run(
-                ESTUDIANTE_POR_TIPO_PASANTIA, TIEMPO_PASANTIA[e], clientes[e], simulacion_id)
-            # acum_clientes += max_clientes
-            acum_horas += horas
+            _, cli = run(
+                ESTUDIANTE_POR_TIPO_PASANTIA, TIEMPO_PASANTIA[e], clientes[e], simulacion.id)
+            clientes_atendidos += cli
 
             print('\n')
             print('-'*50)
-            print(f'Total de clientes atendidos: {acum_horas}')
+            print(f'Total de clientes atendidos: {clientes_atendidos}')
             print('-'*50)
+        
+    sim=EsquemaSimulacion(
+        clientes_g1=c1,
+        clientes_g2=c2,
+        estudiantes_g1=e1,
+        estudiantes_g2=e2,
+        fecha=simulacion.fecha,
+        meta_clientes=MAX_CLIENTES,
+        cantidad_estudiantes=MAX_ESTUDIANTES,
+        clientes_atendidos=clientes_atendidos,
+    )
+    actualizar_simulacion(simulacion.id, sim)

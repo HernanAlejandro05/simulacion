@@ -138,8 +138,9 @@ def run(max_estudiantes, duracion_pasantia, max_clientes, simulacion_id):
     estudiante_in = EsquemaEstudiante(
         horas_cumplidas=0.0,
         tramites_realizados=0,
+        duracion_pasantia=0.0,
         simulacion_id=simulacion_id,
-        tiempo_promedio_por_tramite=0.0
+        tiempo_promedio_por_tramite=0.0,
     )
 
     estudiante_id = registrar_estudiante(estudiante_in).id
@@ -175,9 +176,10 @@ def run(max_estudiantes, duracion_pasantia, max_clientes, simulacion_id):
 
     estudiante_out = EsquemaEstudiante(
         simulacion_id=simulacion_id,
+        duracion_pasantia=(duracion_pasantia / 60),
         horas_cumplidas=total_tiempo_tramites,
         tramites_realizados=contador_de_tramites,
-        tiempo_promedio_por_tramite=promedio_duracion_tramite
+        tiempo_promedio_por_tramite=float(f'{promedio_duracion_tramite:.2f}')
     )
 
     actualizar_estudiante(estudiante_id, estudiante_out)
