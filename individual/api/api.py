@@ -7,9 +7,9 @@ from data.database import engine
 import data.models as models
 
 app = FastAPI(
-    title='API Simulacion Oficina Tributaria UC',
-    description='Esta es una API para consumir los datos generados a traves de una simulación \
-    que busca emular las practicas profesionales de los estudiantes de la Universidad de Cuenca.',
+    title='API Simulación Oficina Tributaria UC',
+    description='Esta es una API para consumir los datos generados a través de una simulación \
+    que busca emular las prácticas profesionales de los estudiantes de la Universidad de Cuenca.',
     version='0.1.0'
 )
 

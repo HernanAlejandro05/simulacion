@@ -3,8 +3,10 @@ import random
 import numpy as np
 import matplotlib.pyplot as pp
 
-from data.dao import registrar_estudiante, actualizar_estudiante, registrar_tramite
 from data.schemas import EsquemaEstudiante, EsquemaTramite
+
+from data.dao.tramites import registrar_tramite
+from data.dao.estudiantes import registrar_estudiante, actualizar_estudiante
 
 # LISTA_TRAMITES = [720, 60, 60, 240, 30, 60, 240, 30, 600, 1200, 480, 240]
 LISTA_TRAMITES = {
@@ -144,7 +146,7 @@ def run(max_estudiantes, duracion_pasantia, max_clientes, simulacion_id):
     )
 
     estudiante_id = registrar_estudiante(estudiante_in).id
-    
+
     print('ESTUDIANTE>>>>>', estudiante_id)
 
     tramite = LISTA_TRAMITES.copy()

@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends
 
-from data.dao import obtener_simulaciones
+from data.dao.simulaciones import obtener_simulaciones
 
 router = APIRouter(
     prefix='/simulaciones',
