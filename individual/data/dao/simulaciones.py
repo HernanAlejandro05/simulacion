@@ -21,6 +21,10 @@ def registrar_simulacion():
     return db_simulacion
 
 
+def obtener_simulacion(id: int):
+    return db.query(Simulacion).filter(Simulacion.id == id).first()
+
+
 def actualizar_simulacion(simulacion_id: int, simulacion: EsquemaSimulacion):
     db_simulacion = db.query(Simulacion).filter(
         Simulacion.id == simulacion_id).first()

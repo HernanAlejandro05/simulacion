@@ -7,8 +7,6 @@ from sqlalchemy.ext.declarative import declarative_base
 
 from settings import BASE_DIR
 
-print("BASE", BASE_DIR)
-
 DATABASE_URL = os.path.join(BASE_DIR, config('DATABASE_NAME'))
 SQLALCHEMY_DATABASE_URL = f'sqlite:///{DATABASE_URL}'
 

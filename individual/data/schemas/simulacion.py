@@ -1,9 +1,13 @@
 from datetime import datetime
 
 from pydantic import BaseModel
+from typing import List
+
+from data.schemas.estudiante import EstudianteBase
 
 
-class Simulacion(BaseModel):
+class SimulacionBase(BaseModel):
+    id: int
     fecha: datetime
     meta_clientes: int
     clientes_g1: int
@@ -12,3 +16,14 @@ class Simulacion(BaseModel):
     estudiantes_g2: int
     clientes_atendidos: int
     cantidad_estudiantes: int
+
+
+class Simulacion(SimulacionBase):
+    pass
+
+
+class SimulacionEstudiantes(Simulacion):
+    estudiantes: List[EstudianteBase] = []
+
+    class Config:
+        orm_mode = True

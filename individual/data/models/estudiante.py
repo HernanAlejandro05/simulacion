@@ -12,9 +12,8 @@ class Estudiante(Base):
     horas_cumplidas = Column(Float)
     duracion_pasantia = Column(Float)
     simulacion_id = Column(Integer, ForeignKey('simulaciones.id'))
-    simulacion = relationship('simulacion.Simulacion',
-                              back_populates='estudiantes')
-    tramites = relationship('tramite.Tramite', back_populates='estudiante')
+    simulacion = relationship('Simulacion', back_populates='estudiantes')
+    tramites = relationship('Tramite', back_populates='estudiante')
 
     def __repr__(self):
         return "<Estudiante(Horas cumplidas='%d')>" % self.horas_cumplidas

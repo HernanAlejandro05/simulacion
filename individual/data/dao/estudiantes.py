@@ -19,6 +19,8 @@ def registrar_estudiante(estudiante: EsquemaEstudiante):
 
     return db_estudiante
 
+def obtener_estudiante(id:int):
+    return db.query(Estudiante).filter_by(id=id).first()
 
 def actualizar_estudiante(estudiante_id: int, estudiante: EsquemaEstudiante):
     db_estudiante = db.query(Estudiante).filter(
@@ -34,3 +36,7 @@ def actualizar_estudiante(estudiante_id: int, estudiante: EsquemaEstudiante):
         return db_estudiante
 
     return None
+
+
+def obtener_estudiantes():
+    return db.query(Estudiante).all()

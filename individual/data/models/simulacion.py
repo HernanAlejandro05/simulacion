@@ -17,5 +17,4 @@ class Simulacion(Base):
     clientes_g2 = Column(Integer)
     estudiantes_g1 = Column(Integer)
     estudiantes_g2 = Column(Integer)
-    estudiantes = relationship(
-        'estudiante.Estudiante', back_populates='simulacion')
+    estudiantes = relationship('Estudiante', back_populates='simulacion')

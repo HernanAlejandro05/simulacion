@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 from typing import Optional, List
 
+from data.schemas.tramite import TramiteBase
 
-class Estudiante(BaseModel):
-    simulacion_id: int
+
+class EstudianteBase(BaseModel):
+    id: int
     horas_cumplidas: float
     duracion_pasantia: float
     tramites_realizados: int
@@ -12,8 +14,13 @@ class Estudiante(BaseModel):
     class Config:
         orm_mode = True
 
-# class EstudianteTramites(Estudiante):
-#     traamites: List[Estudiante] = [None]
 
-#     class Config:
-#         orm_mode = True
+class Estudiante(EstudianteBase):
+    simulacion_id: int
+
+
+class EstudianteTramites(EstudianteBase):
+    tramites: List[TramiteBase] = []
+
+    class Config:
+        orm_mode = True

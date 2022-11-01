@@ -28,11 +28,11 @@ LISTA_TRAMITES = {
 INTERVALO_LLEGADA = 96
 
 tiempo = {}
-tramite = {}
 tramites = {}
 estudiante_id = 0
 tiempo_pasantia = 0
 tipos_de_tramite = {}
+lista_de_tramites = {}
 contador_tramites = 0
 contador_de_tramites = 0
 total_tiempo_tramites = 0
@@ -46,7 +46,7 @@ class OficinaTributariaUC(object):
         self.tiempo_tramite = tiempo_tramite
 
     def atendiendo_tramite(self, cliente):
-        global tramite
+        global lista_de_tramites
         global estudiante_id
         global tiempo_pasantia
         global tipos_de_tramite
@@ -57,13 +57,13 @@ class OficinaTributariaUC(object):
         duracion = 0
         self.check_time()
 
-        lista_tareas = list(tramite.keys())
+        lista_tareas = list(lista_de_tramites.keys())
         if contador_tramites < len(lista_tareas):
             tramite_seleccionado = lista_tareas[contador_tramites]
-            duracion = tramite[tramite_seleccionado]/60
+            duracion = lista_de_tramites[tramite_seleccionado]/60
         else:
-            tramite_seleccionado = np.random.choice(list(tramite.keys()), 1)[0]
-            duracion = tramite[tramite_seleccionado]/60
+            tramite_seleccionado = np.random.choice(list(lista_de_tramites.keys()), 1)[0]
+            duracion = lista_de_tramites[tramite_seleccionado]/60
 
         total_tiempo_tramites += duracion
 
@@ -81,7 +81,7 @@ class OficinaTributariaUC(object):
 
         registrar_tramite(tramite_data)
 
-        yield self.env.timeout(int(tramite[tramite_seleccionado]))
+        yield self.env.timeout(int(lista_de_tramites[tramite_seleccionado]))
         k = duracion
         if k in tramites:
             tramites[k] = tramites[k]+1
@@ -92,14 +92,14 @@ class OficinaTributariaUC(object):
         duracion = tiempo_pasantia/60
         limite_duracion = duracion-30 if duracion == 160 else duracion-20
         if total_tiempo_tramites >= limite_duracion and '1. Capacitacion temas tributarios' \
-                in tramite and '10. Preparacion de talleres de capacitacion' in tramite \
-                and '11. Ejecucion de talleres de capacitacion' in tramite \
-                and '9. Determinar los grupos vulnerables' in tramite:
+                in lista_de_tramites and '10. Preparacion de talleres de capacitacion' in lista_de_tramites \
+                and '11. Ejecucion de talleres de capacitacion' in lista_de_tramites \
+                and '9. Determinar los grupos vulnerables' in lista_de_tramites:
 
-            del tramite['1. Capacitacion temas tributarios']
-            del tramite['9. Determinar los grupos vulnerables']
-            del tramite['11. Ejecucion de talleres de capacitacion']
-            del tramite['10. Preparacion de talleres de capacitacion']
+            del lista_de_tramites['1. Capacitacion temas tributarios']
+            del lista_de_tramites['9. Determinar los grupos vulnerables']
+            del lista_de_tramites['11. Ejecucion de talleres de capacitacion']
+            del lista_de_tramites['10. Preparacion de talleres de capacitacion']
 
 
 def llegada_cliente(env, cliente, oficina):
@@ -127,7 +127,7 @@ def ejecutar_simulacion(env, max_estudiantes, max_clientes, tiempo_tramite, inte
 
 def run(max_estudiantes, duracion_pasantia, max_clientes, simulacion_id):
     global tiempo
-    global tramite
+    global lista_de_tramites
     global tramites
     global estudiante_id
     global tiempo_pasantia
@@ -150,12 +150,12 @@ def run(max_estudiantes, duracion_pasantia, max_clientes, simulacion_id):
 
     print('ESTUDIANTE>>>>>', estudiante_id)
 
-    tramite = LISTA_TRAMITES.copy()
+    lista_de_tramites = LISTA_TRAMITES.copy()
     tiempo_pasantia = duracion_pasantia
 
     env = simpy.Environment()
     env.process(ejecutar_simulacion(env, max_estudiantes,
-                max_clientes, tramite, INTERVALO_LLEGADA))
+                max_clientes, lista_de_tramites, INTERVALO_LLEGADA))
 
     print('*'*50)
     print(f'Tiempo de pasantia: {duracion_pasantia/60}'.upper())
