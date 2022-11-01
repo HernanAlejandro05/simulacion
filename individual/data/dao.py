@@ -14,6 +14,10 @@ def registrar_simulacion():
     return db_simulacion
 
 
+def obtener_simulaciones():
+    return db.query(Simulacion).all()
+
+
 def registrar_estudiante(estudiante: EsquemaEstudiante):
     db_estudiante = Estudiante(
         simulacion_id=estudiante.simulacion_id,
