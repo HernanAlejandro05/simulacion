@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from routes.tramites import router as tra_router
 from routes.estudiantes import router as est_router
 from routes.simulaciones import router as sim_router
 
@@ -31,5 +32,6 @@ tramite.Base.metadata.create_all(bind=engine)
 estudiante.Base.metadata.create_all(bind=engine)
 simulacion.Base.metadata.create_all(bind=engine)
 
+app.include_router(tra_router)
 app.include_router(est_router)
 app.include_router(sim_router)

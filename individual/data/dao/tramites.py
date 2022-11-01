@@ -14,3 +14,11 @@ def registrar_tramite(tramite: EsquemaTramite):
     db.add(db_tramite)
     db.commit()
     db.refresh(db_tramite)
+
+
+def obtener_tramite(id: int):
+    return db.query(Tramite).filter_by(id=id).first()
+
+
+def obtener_tramites():
+    return db.query(Tramite).all()

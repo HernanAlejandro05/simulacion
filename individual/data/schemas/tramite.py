@@ -3,7 +3,6 @@ from typing import Optional, List
 
 
 class TramiteBase(BaseModel):
-    id: int
     duracion_tramite: float
     tramite_seleccionado: str
 

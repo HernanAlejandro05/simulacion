@@ -7,7 +7,6 @@ from data.schemas.estudiante import EstudianteBase
 
 
 class SimulacionBase(BaseModel):
-    id: int
     fecha: datetime
     meta_clientes: int
     clientes_g1: int

@@ -5,7 +5,6 @@ from data.schemas.tramite import TramiteBase
 
 
 class EstudianteBase(BaseModel):
-    id: int
     horas_cumplidas: float
     duracion_pasantia: float
     tramites_realizados: int
