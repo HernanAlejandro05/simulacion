@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes.simulaciones import router as sim_router
 
 from data.database import engine
-import data.models as models
+from data.models import estudiante, simulacion, tramite
 
 app = FastAPI(
     title='API Simulación Oficina Tributaria UC',
@@ -25,6 +25,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-models.Base.metadata.create_all(bind=engine)
+# Crea las tablas e inicializa la basa de datos.
+tramite.Base.metadata.create_all(bind=engine)
+estudiante.Base.metadata.create_all(bind=engine)
+simulacion.Base.metadata.create_all(bind=engine)
 
 app.include_router(sim_router)

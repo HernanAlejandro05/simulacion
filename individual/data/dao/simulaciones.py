@@ -1,6 +1,5 @@
-from ..models import Simulacion
 from ..database import SessionLocal
-
+from ..models.simulacion import Simulacion
 from ..schemas.simulacion import Simulacion as EsquemaSimulacion
 
 db = SessionLocal()

@@ -1,6 +1,5 @@
-from ..models import Tramite
 from ..database import SessionLocal
-
+from ..models.tramite import Tramite
 from ..schemas.tramite import Tramite as EsquemaTramite
 
 db = SessionLocal()

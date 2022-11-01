@@ -1,6 +1,5 @@
-from ..models import Estudiante
 from ..database import SessionLocal
-
+from ..models.estudiante import Estudiante
 from ..schemas.estudiante import Estudiante as EsquemaEstudiante
 
 db = SessionLocal()
