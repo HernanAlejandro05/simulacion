@@ -6,11 +6,19 @@ from typing import Optional, List
 
 class EsquemaSimulacion(BaseModel):
     fecha: datetime
+    meta_clientes: int
+    clientes_g1: int
+    clientes_g2: int
+    estudiantes_g1: int
+    estudiantes_g2: int
+    clientes_atendidos: int
+    cantidad_estudiantes: int
 
 
 class EsquemaEstudiante(BaseModel):
     simulacion_id: int
     horas_cumplidas: float
+    duracion_pasantia: float
     tramites_realizados: int
     tiempo_promedio_por_tramite: float
 
