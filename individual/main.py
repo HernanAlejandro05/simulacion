@@ -1,17 +1,18 @@
-from sim import *
 import random
 
-from data.schemas import EsquemaSimulacion
+from sim import *
+
+from data.schemas.simulacion import Simulacion
 from data.dao.simulaciones import actualizar_simulacion, registrar_simulacion
 
 MAX_CLIENTES = 800
-MAX_ESTUDIANTES = 15
+MAX_ESTUDIANTES = 30
 ESTUDIANTE_POR_TIPO_PASANTIA = 1
 TIEMPO_PASANTIA = [9600, 5760]
 
 if __name__ == '__main__':
-    # r = .625
-    r = random.random()
+    r = .625
+    # r = random.random()
     c1 = int(MAX_CLIENTES*r)
     c2 = MAX_CLIENTES - c1
 
@@ -47,7 +48,7 @@ if __name__ == '__main__':
             print(f'Total de clientes atendidos: {clientes_atendidos}')
             print('-'*50)
 
-    sim = EsquemaSimulacion(
+    sim = Simulacion(
         clientes_g1=c1,
         clientes_g2=c2,
         estudiantes_g1=e1,

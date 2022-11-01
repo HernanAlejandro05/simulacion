@@ -3,7 +3,8 @@ import random
 import numpy as np
 import matplotlib.pyplot as pp
 
-from data.schemas import EsquemaEstudiante, EsquemaTramite
+from data.schemas.tramite import Tramite
+from data.schemas.estudiante import Estudiante
 
 from data.dao.tramites import registrar_tramite
 from data.dao.estudiantes import registrar_estudiante, actualizar_estudiante
@@ -72,7 +73,7 @@ class OficinaTributariaUC(object):
         print(
             f'{cliente} entra a realizar: {tramite_seleccionado} y tomara un tiempo de {duracion}hrs.')
 
-        tramite_data = EsquemaTramite(
+        tramite_data = Tramite(
             duracion_tramite=duracion,
             estudiante_id=estudiante_id,
             tramite_seleccionado=tramite_seleccionado
@@ -137,7 +138,7 @@ def run(max_estudiantes, duracion_pasantia, max_clientes, simulacion_id):
 
     print('SIMULACION>>>>>', simulacion_id)
 
-    estudiante_in = EsquemaEstudiante(
+    estudiante_in = Estudiante(
         horas_cumplidas=0.0,
         tramites_realizados=0,
         duracion_pasantia=0.0,
@@ -176,7 +177,7 @@ def run(max_estudiantes, duracion_pasantia, max_clientes, simulacion_id):
         f'Duracion promedio por tramite: {promedio_duracion_tramite:.2f} horas')
     print(f'Horas cumplidas: {total_tiempo_tramites}\n'.upper())
 
-    estudiante_out = EsquemaEstudiante(
+    estudiante_out = Estudiante(
         simulacion_id=simulacion_id,
         duracion_pasantia=(duracion_pasantia / 60),
         horas_cumplidas=total_tiempo_tramites,
