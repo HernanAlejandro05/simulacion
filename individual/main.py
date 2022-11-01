@@ -13,7 +13,7 @@ estudiante.Base.metadata.create_all(bind=engine)
 simulacion.Base.metadata.create_all(bind=engine)
 
 MAX_CLIENTES = 800
-MAX_ESTUDIANTES = 20
+MAX_ESTUDIANTES = 30
 ESTUDIANTE_POR_TIPO_PASANTIA = 1
 TIEMPO_PASANTIA = [9600, 5760]
 
