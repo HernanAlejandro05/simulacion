@@ -1,7 +1,7 @@
-from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
-from data.dao import obtener_simulaciones
+from data.schemas.simulacion import SimulacionEstudiantes
+from data.dao.simulaciones import obtener_simulaciones, obtener_simulacion
 
 router = APIRouter(
     prefix='/simulaciones',
@@ -12,3 +12,8 @@ router = APIRouter(
 @router.get('/')
 async def listar_simulaciones():
     return obtener_simulaciones()
+
+
+@router.get('/{id}',  response_model=SimulacionEstudiantes)
+async def recuperar_simulacion(id: int):
+    return obtener_simulacion(id)
