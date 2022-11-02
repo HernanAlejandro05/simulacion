@@ -14,6 +14,10 @@ class Tramite(TramiteBase):
     estudiante_id: int
 
 
+class TramiteLectura(TramiteBase):
+    id: int
+
+
 # class TramiteEstudiante(Tramite):
 #     estudiante: Optional[Estudiante] = None
 

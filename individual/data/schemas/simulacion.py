@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel
 from typing import List
 
-from data.schemas.estudiante import EstudianteBase
+from data.schemas.estudiante import EstudianteLectura
 
 
 class SimulacionBase(BaseModel):
@@ -22,7 +22,7 @@ class Simulacion(SimulacionBase):
 
 
 class SimulacionEstudiantes(Simulacion):
-    estudiantes: List[EstudianteBase] = []
+    estudiantes: List[EstudianteLectura] = []
 
     class Config:
         orm_mode = True

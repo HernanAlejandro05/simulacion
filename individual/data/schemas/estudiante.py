@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
 
-from data.schemas.tramite import TramiteBase
+from data.schemas.tramite import TramiteLectura
 
 
 class EstudianteBase(BaseModel):
@@ -18,8 +18,12 @@ class Estudiante(EstudianteBase):
     simulacion_id: int
 
 
+class EstudianteLectura(EstudianteBase):
+    id: int
+
+
 class EstudianteTramites(EstudianteBase):
-    tramites: List[TramiteBase] = []
+    tramites: List[TramiteLectura] = []
 
     class Config:
         orm_mode = True
